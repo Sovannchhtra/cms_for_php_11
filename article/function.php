@@ -73,3 +73,59 @@
                     </figure>';
           }
      }
+
+     function getViewer($type){
+          global $cn;
+          if($type == 'Treading'){
+               $sql = "SELECT * FROM `news` ORDER BY `viewers` DESC LIMIT 1";
+               $rs = $cn->query($sql);
+               $row=$rs->fetch_assoc();
+               echo '<figure>
+                         <a href="news-detail.php">
+                         <div class="thumbnail">
+                              <img width="730" heigth="400" src="../admin/assets/image/'.$row['banner'].'" alt="">
+                              <div class="title">
+                              '.$row['title'].'
+                              </div>
+                         </div>
+                         </a>
+                    </figure>';
+          }else{
+              $sql = "SELECT * FROM `news` WHERE `id` != (SELECT `id` FROM `news` ORDER BY `viewers` DESC LIMIT 1) ORDER BY `viewers` DESC LIMIT 2";
+              $rs = $cn->query($sql);
+              while($row=$rs->fetch_assoc()){
+                    echo '<figure>
+                              <a href="news-detail.php?id='.$row['id'].'">
+                              <div class="thumbnail">
+                                   <img width="350" heigth="200" src="../admin/assets/image/'.$row['thumbnail'].'" alt="">
+                              <div class="title">
+                                   '.$row['title'].'
+                              </div>
+                              </div>
+                              </a>
+                         </figure>';
+              } 
+          }
+     }
+
+     function getListType($type){
+          global $cn;
+          $sql = "SELECT * FROM `news` WHERE `news_type` = '$type' ORDER BY `id` DESC LIMIT 3";
+          $rs = $cn->query($sql);
+          while($row=$rs->fetch_assoc()){
+               echo '
+               <div class="col-4">
+                    <figure>
+                              <a href="news-detail.php?id='.$row['id'].'">
+                              <div class="thumbnail">
+                                   <img width="350" heigth="200" src="../admin/assets/image/'.$row['thumbnail'].'" alt="">
+                              <div class="title">
+                                   '.$row['title'].'
+                              </div>
+                              </div>
+                              </a>
+                         </figure>
+               </div>';
+               
+          }
+     }
